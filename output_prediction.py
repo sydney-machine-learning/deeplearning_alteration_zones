@@ -14,110 +14,13 @@ if tf.test.gpu_device_name():
 else:
     print("No GPU found")
 
-# models = []
+Model_location = r"D:\Internship\UNSW\deeplearning-alterationzones\models\models\LANDSAT8_DATA_CNN_ADAM_MODEL"
+NAME = "LANDSAT8_DATA_ADAM_MODEL"
 
-# file_locations = [r"D:\Internship\UNSW\Alteration_Zones\models\1_conv_1_kernel", r"D:\Internship\UNSW\Alteration_Zones\models\1_conv_2_kernel",
-# r"D:\Internship\UNSW\Alteration_Zones\models\1_conv_3_kernel", r"D:\Internship\UNSW\Alteration_Zones\models\2_conv_1_kernel",
-# r"D:\Internship\UNSW\Alteration_Zones\models\2_conv_2_kernel", r"D:\Internship\UNSW\Alteration_Zones\models\2_conv_3_kernel",
-# r"D:\Internship\UNSW\Alteration_Zones\models\Original_model"]
-
-# NAME = ["1_conv_1_kernel", "1_conv_2_kernel", "1_conv_3_kernel", "2_conv_1_kernel", "2_conv_2_kernel", "2_conv_3_kernel", "Original_model"]
-
-# for i in range(7):
-#     model = keras.models.load_model(file_locations[i])
-#     models.append(model)
-# model = keras.models.load_model(r"D:\Internship\UNSW\Alteration_Zones\models_and_results\ASTER_Original_Model\ASTER_Original_Model")
-
-# # Loading and normalizing a new multispectral image
-# dsPre, featuresPre = raster.read('BrokenHill_ASTER.tif')
-# # featuresPre = featuresPre.astype(float)
-# featuresPre = np.float16(featuresPre)
-
-# for i in range(featuresPre.shape[0]):
-#     bandMinPre = featuresPre[i][:][:].min()
-#     bandMaxPre = featuresPre[i][:][:].max()
-#     bandRangePre = bandMaxPre-bandMinPre
-#     for j in range(featuresPre.shape[1]):
-#         for k in range(featuresPre.shape[2]):
-#             featuresPre[i][j][k] = (featuresPre[i][j][k]-bandMinPre)/bandRangePre
-
-# # Generating image chips from the array
-# new_features = array_to_chips(featuresPre, x_size=7, y_size=7)
-
-# #for i in range(len(models)):
-#     # Predicting new data and exporting the probability raster
-# newPredicted = model.predict(new_features)
-
-# prediction = np.reshape(newPredicted.argmax(axis=1), (dsPre.RasterYSize, dsPre.RasterXSize))
-
-# outFile = 'BrokenHill_ASTER_Original_AlterationMap_CNN.tif'.format()
-
-# raster.export(prediction, dsPre, filename=outFile, dtype='float')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# 
-# model = keras.models.load_model(r"D:\Internship\UNSW\Alteration_Zones\models_and_results\ASTER_Oversampled_Model\ASTER_Oversampled_Model")
-
-# # Loading and normalizing a new multispectral image
-# dsPre, featuresPre = raster.read('BrokenHill_ASTER.tif')
-# # featuresPre = featuresPre.astype(float)
-# featuresPre = np.float16(featuresPre)
-
-# for i in range(featuresPre.shape[0]):
-#     bandMinPre = featuresPre[i][:][:].min()
-#     bandMaxPre = featuresPre[i][:][:].max()
-#     bandRangePre = bandMaxPre-bandMinPre
-#     for j in range(featuresPre.shape[1]):
-#         for k in range(featuresPre.shape[2]):
-#             featuresPre[i][j][k] = (featuresPre[i][j][k]-bandMinPre)/bandRangePre
-
-# # Generating image chips from the array
-# new_features = array_to_chips(featuresPre, x_size=7, y_size=7)
-
-# #for i in range(len(models)):
-#     # Predicting new data and exporting the probability raster
-# newPredicted = model.predict(new_features)
-
-# prediction = np.reshape(newPredicted.argmax(axis=1), (dsPre.RasterYSize, dsPre.RasterXSize))
-
-# outFile = 'BrokenHill_ASTER_Oversampled_AlterationMap_CNN.tif'.format()
-
-# raster.export(prediction, dsPre, filename=outFile, dtype='float')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-model = keras.models.load_model(r"D:\Internship\UNSW\Alteration_Zones\models_and_results\ASTER_MLP_Model\ASTER_MLP_Model")
+model = keras.models.load_model(Model_location)
 
 # Loading and normalizing a new multispectral image
-dsPre, featuresPre = raster.read('BrokenHill_ASTER.tif')
+dsPre, featuresPre = raster.read('Datasets/BrokenHill_Landsat8.tif')
 # featuresPre = featuresPre.astype(float)
 featuresPre = np.float16(featuresPre)
 
@@ -131,13 +34,15 @@ for i in range(featuresPre.shape[0]):
 
 # Generating image chips from the array
 new_features = array_to_chips(featuresPre, x_size=7, y_size=7)
-new_features.shape
-#for i in range(len(models)):
-    # Predicting new data and exporting the probability raster
-# newPredicted = model.predict(new_features)
 
-# prediction = np.reshape(newPredicted.argmax(axis=1), (dsPre.RasterYSize, dsPre.RasterXSize))
 
-# outFile = 'BrokenHill_ASTER_MLP_AlterationMap_CNN.tif'.format()
+##### Some Preprocessing (Only for MLP Code) ######
+#new_features = np.reshape(new_features, (new_features.shape[0], new_features.shape[1]*new_features.shape[2]*new_features.shape[3]))
 
-# raster.export(prediction, dsPre, filename=outFile, dtype='float')
+newPredicted = model.predict(new_features)
+
+prediction = np.reshape(newPredicted.argmax(axis=1), (dsPre.RasterYSize, dsPre.RasterXSize))
+
+outFile = 'Mapped Files/BrokenHill_{}.tif'.format(NAME)
+
+raster.export(prediction, dsPre, filename=outFile, dtype='float')
