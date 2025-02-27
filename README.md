@@ -16,10 +16,10 @@ Traditional geological mapping, relying on field observations and rock sample an
 # Cite
 
 ```bib
-@article{Farahbakhsh2024,
-  title = {A comparative analysis of convolutional neural networks vs. traditional machine learning models for alteration mapping with remote sensing data},
-  author = {Farahbakhsh, Ehsan, Goel, Dakshi, Pimparkar, Dhiraj, Chandra, Rohitash and M{\"u}ller, R. Dietmar},
-  year = {2024},
+@article{Farahbakhsh2025,
+  title = {Convolutional neural networks for mineral prospecting through alteration mapping with remote sensing data},
+  author = {Farahbakhsh, Ehsan, Goel, Dakshi, Pimparkar, Dhiraj,  M{\"u}ller, R. Dietmar and Chandra, Rohitash},
+  year = {2025},
   journal = {?},
   volume = {?},
   number = {?},
